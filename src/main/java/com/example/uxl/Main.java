@@ -11,7 +11,7 @@ public class Main {
         InputParameters inputParameters = new InputParameters();
 
         argumentParser.parseArgs(args, inputParameters);
-        fileProcessor.process(inputParameters);
+        fileProcessor.processInput(inputParameters);
 
         for (String file : inputParameters.inputFiles) {
             System.out.println(file);

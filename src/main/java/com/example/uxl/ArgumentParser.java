@@ -11,7 +11,7 @@ public class ArgumentParser {
         }
     }
 
-    public void parseArg(Iterator<String> iterator, InputParameters inputParameters) throws IllegalArgumentException {
+    private void parseArg(Iterator<String> iterator, InputParameters inputParameters) throws IllegalArgumentException {
         String arg = iterator.next();
         switch (arg) {
             case "-o" -> {
