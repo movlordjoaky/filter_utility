@@ -3,16 +3,13 @@ package com.example.uxl;
 import com.example.uxl.TextFilter.TextType;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static com.example.uxl.InputParameters.StatisticsMode;
 
 public class Statistics {
-
     private final Map<TextType, Integer> linesAmount;
     private final NumberStats intStats, floatStats;
     private int totalLines;
@@ -45,7 +42,7 @@ public class Statistics {
     }
 
     private void updateNumberStats(String line, NumberStats numberStats) {
-        BigDecimal currentNumber = new BigDecimal(line);
+        BigDecimal currentNumber = new BigDecimal(line.strip());
         numberStats.min = (numberStats.min == null) ? currentNumber : numberStats.min.min(currentNumber);
         numberStats.max = (numberStats.max == null) ? currentNumber : numberStats.max.max(currentNumber);
         numberStats.sum = (numberStats.sum == null) ? currentNumber : numberStats.sum.add(currentNumber);
@@ -91,7 +88,7 @@ public class Statistics {
     }
 
     private String finalFormat(BigDecimal value) {
-        return value.setScale(10, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
+        return value == null ? "null" : value.setScale(10, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
     }
 
     private static class NumberStats {

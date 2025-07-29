@@ -28,7 +28,7 @@ public class ArgumentParser {
             case "-s" -> {
                 if (inputParameters.statisticsMode != InputParameters.StatisticsMode.NONE) {
                     inputParameters.statisticsMode = InputParameters.StatisticsMode.NONE;
-                    System.err.println("More than one statistics flags. Set to NONE.");
+                    System.err.println("Different statistics flags. Set to NONE.");
                 } else {
                     inputParameters.statisticsMode = InputParameters.StatisticsMode.SHORT;
                 }
@@ -36,7 +36,7 @@ public class ArgumentParser {
             case "-f" -> {
                 if (inputParameters.statisticsMode != InputParameters.StatisticsMode.NONE) {
                     inputParameters.statisticsMode = InputParameters.StatisticsMode.NONE;
-                    System.err.println("More than one statistics flags. Set to NONE.");
+                    System.err.println("Different statistics flags. Set to NONE.");
                 } else {
                     inputParameters.statisticsMode = InputParameters.StatisticsMode.FULL;
                 }

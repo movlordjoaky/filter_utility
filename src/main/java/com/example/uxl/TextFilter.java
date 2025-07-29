@@ -14,11 +14,11 @@ public class TextFilter {
     }
 
     private boolean isInt(String text) {
-        return text.matches("-?\\d+");
+        return text.strip().matches("-?\\d+");
     }
 
     private boolean isFloat(String text) {
-        return text.matches("-?\\d\\.\\d+([Ee]-?\\d+)?");
+        return text.strip().matches("-?\\d\\.\\d+([Ee]-?\\d+)?");
     }
 
     public enum TextType {
