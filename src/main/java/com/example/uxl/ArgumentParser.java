@@ -4,23 +4,25 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 public class ArgumentParser {
-    public void parseArgs(String[] args, InputParameters inputParameters) throws IllegalArgumentException {
+    public void parseArgs(String[] args, InputParameters inputParameters) {
         Iterator<String> argsIterator = Arrays.asList(args).iterator();
         while (argsIterator.hasNext()) {
             parseArg(argsIterator, inputParameters);
         }
     }
 
-    private void parseArg(Iterator<String> iterator, InputParameters inputParameters) throws IllegalArgumentException {
+    private void parseArg(Iterator<String> iterator, InputParameters inputParameters) {
         String arg = iterator.next();
         switch (arg) {
             case "-o" -> {
-                if (!iterator.hasNext()) throw new IllegalArgumentException("Path after -o is empty");
-                inputParameters.outputPath = iterator.next();
+                if (iterator.hasNext()) {
+                    inputParameters.outputPath = iterator.next();
+                } else System.err.println("Path after -o is empty");
             }
             case "-p" -> {
-                if (!iterator.hasNext()) throw new IllegalArgumentException("Prefix after -p is empty");
-                inputParameters.prefix = iterator.next();
+                if (iterator.hasNext()) {
+                    inputParameters.prefix = iterator.next();
+                } else System.err.println("Prefix after -p is empty");
             }
             case "-a" -> inputParameters.outputMode = InputParameters.OutputMode.ADD;
             case "-s" -> {

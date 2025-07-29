@@ -1,32 +1,33 @@
 package com.example.uxl;
 
-import java.io.File;
 import java.nio.file.*;
 import java.io.IOException;
-import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import com.example.uxl.TextFilter.TextType;
 
+import static com.example.uxl.InputParameters.StatisticsMode;
+
 
 public class FileProcessor {
+    Statistics statistics = new Statistics();
     TextFilter textFilter = new TextFilter();
     Set<TextType> fileCreated = new HashSet<>();
 
     public void processInput(InputParameters inputParameters) {
         for (String file : inputParameters.inputFiles) {
             try (Stream<String> lines = Files.lines(Paths.get(file))) {
-                lines.forEach(line -> processLine(inputParameters, line));
+                lines.forEach(line -> processLine(inputParameters, line, statistics));
             } catch (IOException e) {
                 System.err.println("File reading error: " + file);
             }
         }
+        statistics.print(inputParameters.statisticsMode);
     }
 
-    private void processLine(InputParameters inputParameters, String line) {
+    private void processLine(InputParameters inputParameters, String line, Statistics statistics) {
         if (!line.isBlank()) {
             TextType textType = textFilter.getTextType(line);
             String outputFile = inputParameters.prefix;
@@ -41,7 +42,7 @@ public class FileProcessor {
             }
             outputFile = inputParameters.outputPath + outputFile;
             try {
-                outputLine(inputParameters, textType, outputFile, line);
+                outputLine(inputParameters, textType, outputFile, line, statistics);
             } catch (InvalidPathException e) {
                 System.err.println("Invalid Path: " + outputFile);
             } catch (IOException e) {
@@ -50,7 +51,7 @@ public class FileProcessor {
         }
     }
 
-    private void outputLine(InputParameters inputParameters, TextType textType, String outputFile, String line)
+    private void outputLine(InputParameters inputParameters, TextType textType, String outputFile, String line, Statistics statistics)
             throws IOException {
         Set<StandardOpenOption> writeOptions = new HashSet<>();
         Path path = Paths.get(outputFile);
@@ -59,6 +60,7 @@ public class FileProcessor {
                         && inputParameters.outputMode == InputParameters.OutputMode.ADD) {
             writeOptions.add(StandardOpenOption.APPEND);
         } else {
+            Files.createDirectories(path.getParent());
             writeOptions.add(StandardOpenOption.CREATE);
             writeOptions.add(StandardOpenOption.TRUNCATE_EXISTING);
             writeOptions.add(StandardOpenOption.WRITE);
@@ -66,5 +68,6 @@ public class FileProcessor {
         StandardOpenOption[] writeOptionsArray = writeOptions.toArray(new StandardOpenOption[0]);
         Files.write(path, (line + "\n").getBytes(), writeOptionsArray);
         fileCreated.add(textType);
+        statistics.update(line, textType, inputParameters.statisticsMode);
     }
 }
